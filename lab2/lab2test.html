@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests for lab2.js</title>
+  <link href="https://unpkg.com/mocha@9.1.3/mocha.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script src="https://unpkg.com/chai@4.3.4/chai.js"></script>
+  <script src="https://unpkg.com/mocha@9.1.3/mocha.js"></script>
+
+  <script>mocha.setup('bdd');</script>
+
+  <!-- Подключаем тестируемый файл -->
+  <script src="lab2.js"></script>
+
+  <!-- Файл с тестами (создайте его отдельно или вставьте тесты сюда) -->
+  <script>
+    const expect = chai.expect;
+
+    describe("lab2.js functions", function() {
+
+      describe("pow(x, n)", function() {
+        it("2^2 should be 4", function() {
+          expect(pow(2, 2)).to.equal(4);
+        });
+        it("2^0 should be 1", function() {
+          expect(pow(2, 0)).to.equal(1);
+        });
+        it("0^0 should be 1 (consistent with Math.pow)", function() {
+          expect(pow(0, 0)).to.equal(1);
+        });
+        it("2^-2 should be 0.25", function() {
+          expect(pow(2, -2)).to.equal(0.25);
+        });
+        it("3^3 should be 27", function() {
+          expect(pow(3, 3)).to.equal(27);
+        });
+        it("5^-1 should be 0.2", function() {
+          expect(pow(5, -1)).to.equal(0.2);
+        });
+      });
+
+      describe("sumTo(n)", function() {
+        it("sumTo(100) should be 5050", function() {
+          expect(sumTo(100)).to.equal(5050);
+        });
+        it("sumTo(1) should be 1", function() {
+          expect(sumTo(1)).to.equal(1);
+        });
+        it("sumTo(3) should be 6", function() {
+          expect(sumTo(3)).to.equal(6);
+        });
+        it("sumTo(0) should return NaN (or handle error as per implementation)", function() {
+          // В моей реализации sumTo есть console.warn и возврат NaN для n < 1
+          expect(sumTo(0)).to.be.NaN;
+        });
+      });
+
+      describe("isLeapYear(year)", function() {
+        it("2024 is a leap year", function() {
+          expect(isLeapYear(2024)).to.be.true;
+        });
+        it("2025 is not a leap year", function() {
+          expect(isLeapYear(2025)).to.be.false;
+        });
+        it("2000 is a leap year (divisible by 400)", function() {
+          expect(isLeapYear(2000)).to.be.true;
+        });
+        it("1900 is not a leap year (divisible by 100 but not by 400)", function() {
+          expect(isLeapYear(1900)).to.be.false;
+        });
+        it("2004 is a leap year (divisible by 4, not by 100)", function() {
+          expect(isLeapYear(2004)).to.be.true;
+        });
+      });
+
+      describe("factorial(n)", function() {
+        it("factorial(0) should be 1n", function() {
+          expect(factorial(0)).to.equal(1n);
+        });
+        it("factorial(1) should be 1n", function() {
+          expect(factorial(1)).to.equal(1n);
+        });
+        it("factorial(5) should be 120n", function() {
+          expect(factorial(5)).to.equal(120n);
+        });
+        it("factorial(10) should be 3628800n", function() {
+          expect(factorial(10)).to.equal(3628800n);
+        });
+        it("factorial(20) should be 2432902008176640000n", function() {
+          expect(factorial(20)).to.equal(2432902008176640000n);
+        });
+        it("should throw error for negative input", function() {
+          expect(() => factorial(-1)).to.throw("Факториал не определен для отрицательных чисел.");
+        });
+      });
+
+      describe("fib(n)", function() {
+        it("fib(0) should be 0n", function() {
+          expect(fib(0)).to.equal(0n);
+        });
+        it("fib(1) should be 1n", function() {
+          expect(fib(1)).to.equal(1n);
+        });
+        it("fib(2) should be 1n", function() {
+          expect(fib(2)).to.equal(1n);
+        });
+        it("fib(10) should be 55n", function() {
+          expect(fib(10)).to.equal(55n);
+        });
+        it("fib(20) should be 6765n", function() {
+          expect(fib(20)).to.equal(6765n);
+        });
+        it("fib(100) should be 354224848179261915075n", function() {
+          expect(fib(100)).to.equal(354224848179261915075n);
+        });
+         it("fib(-1) should return NaN (or handle error)", function() {
+          expect(fib(-1)).to.be.NaN;
+        });
+      });
+
+      describe("compare(x)", function() {
+        const compareWith5 = compare(5);
+        it("compare(5)(4) should be false", function() {
+          expect(compareWith5(4)).to.be.false;
+        });
+        it("compare(5)(5) should be null", function() {
+          expect(compareWith5(5)).to.be.null;
+        });
+        it("compare(5)(6) should be true", function() {
+          expect(compareWith5(6)).to.be.true;
+        });
+
+        const compareWith0 = compare(0);
+        it("compare(0)(-1) should be false", function() {
+          expect(compareWith0(-1)).to.be.false;
+        });
+        it("compare(0)(0) should be null", function() {
+          expect(compareWith0(0)).to.be.null;
+        });
+        it("compare(0)(1) should be true", function() {
+          expect(compareWith0(1)).to.be.true;
+        });
+      });
+
+      describe("sum(...args)", function() {
+        it("sum() should be 0", function() {
+          expect(sum()).to.equal(0);
+        });
+        it("sum(1) should be 1", function() {
+          expect(sum(1)).to.equal(1);
+        });
+        it("sum(1, 2) should be 3", function() {
+          expect(sum(1, 2)).to.equal(3);
+        });
+        it("sum(1, 2, 3, 4, 5) should be 15", function() {
+          expect(sum(1, 2, 3, 4, 5)).to.equal(15);
+        });
+        it("sum(-1, 1, 5) should be 5", function() {
+          expect(sum(-1, 1, 5)).to.equal(5);
+        });
+      });
+
+      describe("addBlackSpot(obj)", function() {
+        it("should add a Symbol.for('blackSpot') property with value true", function() {
+          const obj = {};
+          const resultObj = addBlackSpot(obj);
+          const blackSpotSymbol = Symbol.for("blackSpot");
+          
+          expect(resultObj).to.equal(obj); // Should return the same object
+          expect(obj).to.have.property(blackSpotSymbol);
+          expect(obj[blackSpotSymbol]).to.be.true;
+        });
+
+        it("should work on an object with existing properties", function() {
+          const obj = { name: "Test" };
+          addBlackSpot(obj);
+          const blackSpotSymbol = Symbol.for("blackSpot");
+
+          expect(obj.name).to.equal("Test");
+          expect(obj).to.have.property(blackSpotSymbol);
+          expect(obj[blackSpotSymbol]).to.be.true;
+        });
+      });
+
+    });
+
+    mocha.run();
+  </script>
+</body>
+</html>
