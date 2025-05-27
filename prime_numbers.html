@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простые числа</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+        h1 { text-align: center; color: #ffc107; }
+        label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+        input[type="number"] { width: calc(100% - 22px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #ffc107; color: #333; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; display: block; width: 100%; }
+        button:hover { background-color: #e0a800; }
+        #primesResult { margin-top: 20px; padding: 10px; border: 1px solid #eee; border-radius: 4px; background-color: #f9f9f9; min-height: 50px; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Простые числа</h1>
+        <div>
+            <label for="limitN">Введите верхнюю границу (n):</label>
+            <input type="number" id="limitN" name="limitN" min="2" required value="10">
+        </div>
+        <button type="button" id="findPrimesButton">Найти</button>
+        
+        <h2>Простые числа до n:</h2>
+        <div id="primesResult"></div>
+    </div>
+
+    <script>
+        'use strict';
+
+        function isPrime(num) {
+            if (num <= 1) return false; // 1 и числа меньше не простые
+            if (num <= 3) return true;  // 2 и 3 простые
+
+            // Проверка делимости на 2 и 3
+            if (num % 2 === 0 || num % 3 === 0) return false;
+
+            // Проверяем делители вида 6k ± 1 до sqrt(num)
+            // Все простые числа больше 3 можно представить в виде 6k ± 1
+            for (let i = 5; i * i <= num; i = i + 6) {
+                if (num % i === 0 || num % (i + 2) === 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        document.getElementById('findPrimesButton').addEventListener('click', function() {
+            const limitNInput = document.getElementById('limitN');
+            const n = parseInt(limitNInput.value, 10);
+            const primesResultDiv = document.getElementById('primesResult');
+
+            primesResultDiv.textContent = ''; // Очищаем предыдущий результат
+
+            if (isNaN(n) || n < 2) {
+                primesResultDiv.textContent = 'Пожалуйста, введите число больше или равное 2.';
+                return;
+            }
+
+            let primes = [];
+            for (let i = 2; i <= n; i++) {
+                if (isPrime(i)) {
+                    primes.push(i);
+                }
+            }
+
+            if (primes.length > 0) {
+                primesResultDiv.textContent = primes.join(', ');
+            } else {
+                primesResultDiv.textContent = 'Простых чисел в указанном диапазоне нет (что невозможно при n >= 2).';
+            }
+        });
+    </script>
+</body>
+</html>
