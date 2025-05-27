@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests for lab3.js</title>
+  <link href="https://unpkg.com/mocha@9.1.3/mocha.css" rel="stylesheet" />
+</head>
+<body>
+  <div id="mocha"></div>
+
+  <script src="https://unpkg.com/chai@4.3.4/chai.js"></script>
+  <script src="https://unpkg.com/mocha@9.1.3/mocha.js"></script>
+
+  <script>mocha.setup('bdd')</script>
+
+  <!-- Import functions to be tested as ES modules -->
+  <!-- lab2.js is implicitly loaded as a dependency of lab3.js -->
+  <script type="module">
+    import {
+        getDecimal,
+        normalizeUrl,
+        checkSpam,
+        truncate,
+        camelize,
+        fibs,
+        arrReverseSorted,
+        unique
+    } from './lab3.js';
+
+    const expect = chai.expect;
+
+    describe('getDecimal(num)', function() {
+      it('should return the fractional part for positive numbers', function() {
+        expect(getDecimal(1.23)).to.be.closeTo(0.23, 1e-9);
+        expect(getDecimal(5.6789)).to.be.closeTo(0.6789, 1e-9);
+        expect(getDecimal(0.5)).to.be.closeTo(0.5, 1e-9);
+      });
+
+      it('should return the "positive" fractional part for negative numbers', function() {
+        // -1.23 = -2 + 0.77
+        expect(getDecimal(-1.23)).to.be.closeTo(0.77, 1e-9);
+        // -0.5 = -1 + 0.5
+        expect(getDecimal(-0.5)).to.be.closeTo(0.5, 1e-9);
+         // -5.8 = -6 + 0.2
+        expect(getDecimal(-5.8)).to.be.closeTo(0.2, 1e-9);
+      });
+
+      it('should return 0 for integers', function() {
+        expect(getDecimal(1)).to.equal(0);
+        expect(getDecimal(0)).to.equal(0);
+        expect(getDecimal(-5)).to.equal(0);
+        expect(getDecimal(123)).to.equal(0);
+      });
+       it('should handle numbers very close to integers', function() {
+        expect(getDecimal(1.0000000001)).to.be.closeTo(0.0000000001, 1e-10);
+        expect(getDecimal(0.9999999999)).to.be.closeTo(0.9999999999, 1e-10); // 0 + 0.999...
+        expect(getDecimal(-1.000000001)).to.be.closeTo(0.999999999, 1e-9); // -2 + 0.999...
+        expect(getDecimal(-0.000000001)).to.be.closeTo(0.999999999, 1e-9); // -1 + 0.999...
+      });
+    });
+
+    describe('normalizeUrl(url)', function() {
+      it('should add https:// if no protocol is present', function() {
+        expect(normalizeUrl('yandex.ru')).to.equal('https://yandex.ru');
+      });
+      it('should change http:// to https://', function() {
+        expect(normalizeUrl('http://google.com')).to.equal('https://google.com');
+      });
+      it('should leave https:// as is', function() {
+        expect(normalizeUrl('https://example.org')).to.equal('https://example.org');
+      });
+      it('should correctly handle names that look like protocols', function() {
+        expect(normalizeUrl('https.ru')).to.equal('https://https.ru');
+        expect(normalizeUrl('http.net')).to.equal('https://http.net');
+      });
+    });
+
+    describe('checkSpam(str)', function() {
+      it('should detect "viagra" case-insensitively', function() {
+        expect(checkSpam('buy ViAgRA now')).to.be.true;
+        expect(checkSpam('innocent viagra_pill')).to.be.true;
+      });
+      it('should detect "XXX" case-insensitively', function() {
+        expect(checkSpam('free xXx movies')).to.be.true;
+        expect(checkSpam('watch XXXNOW')).to.be.true;
+      });
+      it('should return false for non-spam strings', function() {
+        expect(checkSpam('innocent rabbit')).to.be.false;
+        expect(checkSpam('example text')).to.be.false;
+      });
+       it('should handle strings with mixed content', function() {
+        expect(checkSpam('_XxX_')).to.be.true;
+        expect(checkSpam('__Viagra__')).to.be.true;
+      });
+    });
+
+    describe('truncate(str, maxlength)', function() {
+      it('should not truncate if string length is less than or equal to maxlength', function() {
+        expect(truncate('Short string', 20)).to.equal('Short string');
+        expect(truncate('Exact length', 12)).to.equal('Exact length');
+        expect(truncate('Мама мыла раму.', 100)).to.equal('Мама мыла раму.');
+      });
+      it('should truncate and add ellipsis if string is longer than maxlength', function() {
+        expect(truncate('This is a very long string', 10)).to.equal('This is a…');
+        expect(truncate('Мама мыла раму.', 10)).to.equal('Мама мыла…');
+      });
+      it('should handle maxlength of 1', function() {
+        expect(truncate('Test', 1)).to.equal('…');
+      });
+      it('should handle empty string', function() {
+        expect(truncate('', 5)).to.equal('');
+        expect(truncate('', 0)).to.equal(''); // debatable, but consistent with slice(0, -1)
+      });
+    });
+
+    describe('camelize(str)', function() {
+      it('should convert dash-separated strings to camelCase', function() {
+        expect(camelize('var-test-text')).to.equal('varTestText');
+        expect(camelize('background-color')).to.equal('backgroundColor');
+        expect(camelize('list-style-image')).to.equal('listStyleImage');
+      });
+      it('should handle leading dashes by capitalizing the first word', function() {
+        // A leading dash means the first "word" before it is empty.
+        // The second word (after the first dash) should be capitalized.
+        expect(camelize('-webkit-transition')).to.equal('WebkitTransition');
+      });
+      it('should handle single word strings (no dashes)', function() {
+        expect(camelize('word')).to.equal('word');
+      });
+      it('should handle empty string', function() {
+        expect(camelize('')).to.equal('');
+      });
+      it('should handle string with only dashes', function() {
+        expect(camelize('---')).to.equal(''); // three empty strings, first is kept, others ucFirst('') is ''
+      });
+    });
+
+    describe('fibs(n)', function() {
+      it('should return an array of n Fibonacci numbers (BigInt)', function() {
+        expect(fibs(0)).to.deep.equal([]);
+        expect(fibs(1)).to.deep.equal([0n]);
+        expect(fibs(2)).to.deep.equal([0n, 1n]);
+        expect(fibs(5)).to.deep.equal([0n, 1n, 1n, 2n, 3n]);
+        expect(fibs(8)).to.deep.equal([0n, 1n, 1n, 2n, 3n, 5n, 8n, 13n]);
+      });
+      it('should throw an error for negative n', function() {
+        expect(() => fibs(-1)).to.throw("Input must be a non-negative integer for count.");
+      });
+       it('should throw an error for non-integer n', function() {
+        expect(() => fibs(1.5)).to.throw("Input must be a non-negative integer for count.");
+      });
+    });
+
+    describe('arrReverseSorted(arr)', function() {
+      it('should return a new array sorted in descending order', function() {
+        const original = [1, 3, 22, 5, -2];
+        const sorted = arrReverseSorted(original);
+        expect(sorted).to.deep.equal([22, 5, 3, 1, -2]);
+        expect(original).to.deep.equal([1, 3, 22, 5, -2]); // Original unchanged
+      });
+      it('should handle an empty array', function() {
+        expect(arrReverseSorted([])).to.deep.equal([]);
+      });
+      it('should handle array with one element', function() {
+        expect(arrReverseSorted([5])).to.deep.equal([5]);
+      });
+      it('should handle array with duplicate elements', function() {
+        expect(arrReverseSorted([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5])).to.deep.equal([9, 6, 5, 5, 5, 4, 3, 3, 2, 1, 1]);
+      });
+    });
+
+    describe('unique(arr)', function() {
+      it('should return an array of unique numbers', function() {
+        expect(unique([0, 1, 1, 2, 1, 0, 3])).to.deep.equal([0, 1, 2, 3]);
+      });
+      it('should return an array of unique strings', function() {
+        expect(unique(['a', 'b', 'c', 'c', 'a', 'd'])).to.deep.equal(['a', 'b', 'c', 'd']);
+      });
+      it('should return an array of unique mixed types, preserving order of first appearance', function() {
+        const original = [0, 'a', 1, 'b', 0, 'a', true, false, true];
+        expect(unique(original)).to.deep.equal([0, 'a', 1, 'b', true, false]);
+      });
+      it('should handle an empty array', function() {
+        expect(unique([])).to.deep.equal([]);
+      });
+      it('should handle an array with all unique elements', function() {
+        expect(unique([1, 2, 3])).to.deep.equal([1, 2, 3]);
+      });
+    });
+
+    // Run Mocha
+    mocha.run();
+  </script>
+
+</body>
+</html>
