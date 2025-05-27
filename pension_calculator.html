@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пенсионный калькулятор</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        h1 { text-align: center; color: #0056b3; }
+        label { display: block; margin-top: 10px; margin-bottom: 5px; font-weight: bold; }
+        input[type="number"], textarea { width: calc(100% - 22px); padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .gender-group label { font-weight: normal; margin-right: 15px; }
+        .gender-group input[type="radio"] { margin-right: 5px; }
+        button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; display: block; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        textarea { min-height: 80px; resize: vertical; }
+        .error-message { color: red; font-size: 0.9em; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Пенсионный калькулятор</h1>
+        <form id="pensionForm">
+            <div>
+                <label for="age">Возраст:</label>
+                <input type="number" id="age" name="age" required min="0">
+            </div>
+            <div class="gender-group">
+                <label>Пол:</label>
+                <input type="radio" id="male" name="gender" value="male" required>
+                <label for="male">Мужской</label>
+                <input type="radio" id="female" name="gender" value="female" required>
+                <label for="female">Женский</label>
+            </div>
+            <button type="submit">Рассчитать</button>
+            <div>
+                <label for="result">Результат:</label>
+                <textarea id="result" readonly></textarea>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        'use strict';
+        document.getElementById('pensionForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+
+            const ageInput = document.getElementById('age');
+            const genderInput = document.querySelector('input[name="gender"]:checked');
+            const resultTextarea = document.getElementById('result');
+
+            let age = parseInt(ageInput.value, 10);
+            let gender = genderInput ? genderInput.value : null;
+            let message = '';
+
+            // Простая валидация на случай, если required не сработает или введено не число
+            if (isNaN(age) || age < 0) {
+                message = "Пожалуйста, введите корректный возраст.";
+                resultTextarea.value = message;
+                return;
+            }
+
+            if (!gender) {
+                message = "Пожалуйста, выберите пол.";
+                resultTextarea.value = message;
+                return;
+            }
+
+            if (age >= 0 && age <= 17) {
+                message = "Вам работать ещё рано — учитесь";
+            } else if (gender === 'male') {
+                if (age >= 18 && age <= 59) {
+                    message = "Вам ещё работать и работать";
+                } else if (age >= 60 && age <= 64) {
+                    message = "Скоро пенсия!";
+                } else if (age >= 65) {
+                    message = "Вам пора на пенсию";
+                } else {
+                    message = "Да кто ты такой?"; // Этот случай маловероятен при min="0"
+                }
+            } else if (gender === 'female') {
+                if (age >= 18 && age <= 54) {
+                    message = "Вам ещё работать и работать";
+                } else if (age >= 55 && age <= 59) {
+                    message = "Скоро пенсия!";
+                } else if (age >= 60) {
+                    message = "Вам пора на пенсию";
+                } else {
+                    message = "Да кто ты такой?"; // Аналогично
+                }
+            } else {
+                // Этот блок не должен выполниться, если радиокнопки обязательны
+                message = "Да кто ты такой?";
+            }
+            
+            resultTextarea.value = message;
+        });
+    </script>
+</body>
+</html>
