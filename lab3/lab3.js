@@ -3,36 +3,42 @@
  * @module lab3
  */
 
-import { fib } from './lab2.js'; // Assuming lab2.js is in the same directory
+import { fib } from './lab2/lab2.js'; // Updated path
 
 /**
  * Returns the fractional part of a number.
- * For negative numbers, it returns 1 - |fractional_part_if_positive|.
- * Example: getDecimal(-1.23) returns 0.77 because -1.23 = -2 + 0.77
+ * For positive numbers, this is `num % 1`.
+ * For negative numbers, the result is such that `Math.floor(num) + getDecimal(num) = num`.
+ * Example: getDecimal(-1.23) returns 0.77 because -1.23 = -2 + 0.77.
  * @param {number} num The input number.
- * @returns {number} The fractional part.
+ * @returns {number} The fractional part. Returns 0 for integers.
  * @example
  * getDecimal(1.23)  // 0.23
  * getDecimal(-1.23) // 0.77
  * getDecimal(1)     // 0
  * getDecimal(0)     // 0
  * getDecimal(-1)    // 0
+ * getDecimal(-0.5)  // 0.5
  */
 export function getDecimal(num) {
     if (Number.isInteger(num)) {
         return 0;
     }
-    // For positive numbers: num - Math.floor(num)
-    // For negative numbers: num - Math.floor(num) also works correctly to get the positive fractional part
-    // e.g. -1.23 - Math.floor(-1.23) = -1.23 - (-2) = 0.77
+    // The expression num - Math.floor(num) correctly gives the desired
+    // "positive remainder" for both positive and negative numbers according to the examples.
+    // e.g., 1.23 - floor(1.23) = 1.23 - 1 = 0.23
+    // e.g., -1.23 - floor(-1.23) = -1.23 - (-2) = 0.77
     let fractional = num - Math.floor(num);
-    // Fix potential floating point inaccuracies for results very close to 0 or 1
-    if (Math.abs(fractional) < 1e-9 || Math.abs(1 - fractional) < 1e-9 && num < 0) {
+
+    // Correct for floating point inaccuracies if the number was essentially an integer.
+    // If fractional is extremely close to 0, it means num was very near an integer (e.g., 2.000...001 or 1.999...999)
+    if (Math.abs(fractional) < 1e-9) {
         return 0;
     }
-     // Handle specific case like -0.something giving a result very close to 1
-    if (num < 0 && num > -1 && fractional !== 0) { // e.g. -0.5 should yield 0.5
-        return num + 1;
+    // If fractional is extremely close to 1 (can happen for num like -2.000...001 where floor is -3)
+    // it also implies num was very near an integer (Math.floor(num) + 1).
+    if (Math.abs(fractional - 1) < 1e-9) {
+        return 0;
     }
     return fractional;
 }
@@ -76,7 +82,7 @@ export function checkSpam(str) {
  * Truncates a string if it's longer than the specified maximum length.
  * If truncated, the end of the string is replaced with the ellipsis character "…".
  * @param {string} str The string to truncate.
- * @param {number} maxlength The maximum length of the string.
+ * @param {number} maxlength The maximum length of the string. Must be non-negative.
  * @returns {string} The (potentially) truncated string.
  * @example
  * truncate('What I\'d like to tell on this topic is:', 20) // 'What I\'d like to te…'
@@ -84,9 +90,11 @@ export function checkSpam(str) {
  * truncate('Мама мыла раму.', 10)                         // 'Мама мыла…'
  */
 export function truncate(str, maxlength) {
+    if (maxlength < 0) maxlength = 0; // Guard against negative maxlength
     if (str.length <= maxlength) {
         return str;
     }
+    if (maxlength === 0) return ""; // Or "…" if maxlength is 1 and you want at least ellipsis
     return str.slice(0, maxlength - 1) + '…'; // U+2026 is one character
 }
 
@@ -109,13 +117,13 @@ function ucFirst(str) {
  * @example
  * camelize('background-color') // 'backgroundColor'
  * camelize('list-style-image') // 'listStyleImage'
- * camelize('-webkit-transition') // 'WebkitTransition' (leading dash results in capitalized first word)
+ * camelize('-webkit-transition') // 'WebkitTransition'
  */
 export function camelize(str) {
     return str
         .split('-')
         .map((word, index) => {
-            if (index === 0 && word === '') { // handles cases like '-webkit-transition' where first part is empty
+            if (index === 0 && word === '') {
                 return '';
             }
             return (index === 0 && word !== '') ? word : ucFirst(word);
@@ -126,7 +134,7 @@ export function camelize(str) {
 
 /**
  * Generates an array of Fibonacci numbers up to (but not including) the n-th number.
- * Uses the `fib` function imported from `./lab2.js`.
+ * Uses the `fib` function imported from `./lab2/lab2.js`.
  * @param {number} n - The count of Fibonacci numbers to generate. (e.g., n=5 means fib(0) to fib(4))
  *                     Must be a non-negative integer.
  * @returns {BigInt[]} An array of the first n Fibonacci numbers. Returns an empty array if n is 0.
@@ -142,7 +150,11 @@ export function fibs(n) {
     }
     const result = [];
     for (let i = 0; i < n; i++) {
-        result.push(fib(i)); // fib is imported from lab2.js
+        const fibValue = fib(i); // fib is imported from lab2/lab2.js
+        if (typeof fibValue !== 'bigint') { // fib from user's lab2.js returns NaN for bad input
+            throw new Error(`fib(${i}) did not return a BigInt. Received: ${fibValue}`);
+        }
+        result.push(fibValue);
     }
     return result;
 }
