@@ -1,42 +1,31 @@
-// lab2/lab2.js
+// lab2.js
 
 /**
- * Возвращает x в степени n.
- *
- * @param {number} x Основание.
- * @param {number} n Экспонента (целое число).
- * @returns {number} x в степени n.
+ * Возводит x в степень n.
+ * @param {number} x - Основание.
+ * @param {number} n - Целочисленный показатель степени.
+ * @returns {number} Результат возведения x в степень n.
  */
 function pow(x, n) {
-  if (n === 0) {
-    return 1;
-  }
-  return Math.pow(x, n);
+  return x ** n;
 }
 
 /**
  * Вычисляет сумму чисел от 1 до n включительно.
- * Эта функция создается с помощью конструктора `new Function`.
- *
- * @param {number} n Натуральное число, до которого вычисляется сумма.
+ * Функция создана с использованием 'new Function'.
+ * @param {number} n - Натуральное число, до которого вычисляется сумма.
  * @returns {number} Сумма чисел от 1 до n.
  */
-const sumTo = new Function('n', `
-  if (n < 1 || !Number.isInteger(n)) {
-    console.warn("sumTo: n должно быть натуральным числом.");
-    return NaN;
-  }
-  let sum = 0;
-  for (let i = 1; i <= n; i++) {
-    sum += i;
-  }
-  return sum;
-`);
+const sumTo = new Function('n', 
+  // Используем формулу арифметической прогрессии для эффективности
+  if (n < 1) return 0;
+  return n * (n + 1) / 2;
+);
 
 /**
  * Проверяет, является ли год високосным.
- *
- * @param {number} year Год для проверки.
+ * Год является високосным, если он кратен 400, или если он кратен 4, но не кратен 100.
+ * @param {number} year - Год для проверки.
  * @returns {boolean} true, если год високосный, иначе false.
  */
 function isLeapYear(year) {
@@ -44,57 +33,53 @@ function isLeapYear(year) {
 }
 
 /**
- * Вычисляет факториал числа n (n!).
- * Возвращаемое значение имеет тип BigInt.
- *
- * @param {number} n Неотрицательное целое число.
+ * Вычисляет факториал числа n с использованием рекурсии.
+ * @param {number} n - Неотрицательное целое число.
  * @returns {BigInt} Факториал числа n.
- * @throws {Error} Если n - отрицательное число.
  */
 function factorial(n) {
   if (n < 0) {
-    throw new Error("Факториал не определен для отрицательных чисел.");
+    throw new Error("Факториал определен только для неотрицательных чисел.");
   }
   if (n === 0) {
-    return 1n;
+    return 1n; // Базовый случай рекурсии, возвращаем BigInt
   }
+  // n! = n * (n-1)!
+  // BigInt() необходим для преобразования n в тип BigInt для умножения
   return BigInt(n) * factorial(n - 1);
 }
 
 /**
- * Возвращает n-е число Фибоначчи.
- * Возвращаемое значение имеет тип BigInt.
- *
- * @param {number} n Индекс числа Фибоначчи (неотрицательное целое число).
- * @returns {BigInt|NaN} n-е число Фибоначчи. NaN if input is invalid.
+ * Находит n-е число Фибоначчи.
+ * Использует итеративный подход для производительности.
+ * @param {number} n - Порядковый номер числа Фибоначчи (начиная с 0).
+ * @returns {BigInt} n-е число Фибоначчи.
  */
-export function fib(n) { // Added "export"
-  if (n < 0 || !Number.isInteger(n)) {
-      console.warn("fib: n должно быть неотрицательным целым числом.");
-      return NaN;
+function fib(n) {
+  if (n < 0) {
+    throw new Error("Числа Фибоначчи не определены для отрицательных индексов.");
   }
-  if (n === 0) {
-    return 0n;
-  }
-  if (n === 1) {
-    return 1n;
-  }
+  if (n === 0) return 0n;
 
   let a = 0n;
   let b = 1n;
+
   for (let i = 2; i <= n; i++) {
     let temp = a + b;
     a = b;
     b = temp;
   }
+
   return b;
 }
 
 /**
- * Принимает целочисленное значение x и возвращает анонимную функцию.
- *
- * @param {number} x Целочисленное значение для сравнения.
- * @returns {function(number): (boolean|null)} Анонимная функция.
+ * Возвращает функцию-компаратор, которая сравнивает свой аргумент с заданным числом x.
+ * @param {number} x - Число, с которым будет происходить сравнение.
+ * @returns {function(number): (boolean|null)} Анонимная функция, принимающая y.
+ *   - Возвращает true, если y > x.
+ *   - Возвращает false, если y < x.
+ *   - Возвращает null, если y === x.
  */
 function compare(x) {
   return function(y) {
@@ -109,23 +94,19 @@ function compare(x) {
 }
 
 /**
- * Возвращает сумму всех своих аргументов.
- *
- * @param {...number} args Числа для суммирования.
+ * Возвращает сумму всех переданных аргументов.
+ * @param {...number} args - Числа для суммирования.
  * @returns {number} Сумма всех аргументов.
  */
 function sum(...args) {
-  if (args.length === 0) {
-    return 0;
-  }
-  return args.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  // Используем reduce для суммирования. Начальное значение 0, чтобы sum() вернул 0.
+  return args.reduce((total, current) => total + current, 0);
 }
 
 /**
- * Принимает на вход объект и добавляет к нему символьное свойство blackSpot=true.
- *
- * @param {object} obj Объект, к которому добавляется свойство.
- * @returns {object} Модифицированный объект.
+ * Добавляет в объект символьное свойство [Symbol.for("blackSpot")] со значением true.
+ * @param {object} obj - Объект, который нужно изменить.
+ * @returns {object} Тот же объект с добавленным свойством.
  */
 function addBlackSpot(obj) {
   const blackSpotSymbol = Symbol.for("blackSpot");
