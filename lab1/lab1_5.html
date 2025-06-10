@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица животных</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8ed;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input {
+            padding: 10px;
+            width: 100px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .note {
+            margin-top: 25px;
+            font-style: italic;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Таблица животных</h1>
+
+        <label for="rowsInput">Количество строк:</label>
+        <input type="number" id="rowsInput" min="1" value="5">
+
+        <button id="drawButton">Рисовать</button>
+
+        <div class="note">
+            Результат будет выведен в консоль браузера (F12 → Console)
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+
+        document.getElementById('drawButton').addEventListener('click', function() {
+            const rowsInput = document.getElementById('rowsInput');
+            const rows = parseInt(rowsInput.value);
+
+            if (isNaN(rows)) {
+                console.error('Пожалуйста, введите число строк');
+                return;
+            }
+
+            console.clear();
+
+            const pattern = ['dog', 'dog', 'dog', 'cat', 'cat'];
+            let patternIndex = 0;
+
+            for (let i = 0; i < rows; i++) {
+                let row = '';
+
+                for (let j = 0; j < 6; j++) {
+                    row += pattern[patternIndex % pattern.length];
+
+                    if (j < 5) {
+                        row += '\t';
+                    }
+
+                    patternIndex++;
+                }
+
+                console.log(row);
+            }
+        });
+    </script>
+</body>
+</html>
