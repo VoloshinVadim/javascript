@@ -6,69 +6,50 @@
     <title>Пенсионный калькулятор</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
-            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 20px;
             line-height: 1.6;
         }
         .container {
-            max-width: 500px;
+            max-width: 400px;
             margin: 0 auto;
-            padding: 30px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
+            padding: 20px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: bold;
-            color: #2c3e50;
         }
         input[type="number"],
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 8px;
             box-sizing: border-box;
         }
         textarea {
             height: 100px;
             resize: vertical;
-            background-color: #f9f9f9;
         }
         button {
-            background-color: #3498db;
+            background-color: #4CAF50;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            width: 100%;
-            transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #2980b9;
+            background-color: #45a049;
         }
         .radio-group {
-            margin: 15px 0;
-        }
-        .radio-option {
             margin: 10px 0;
         }
-        .radio-option input[type="radio"] {
-            margin-right: 10px;
+        .radio-option {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -97,7 +78,7 @@
 
             <button type="button" id="calculateBtn">Рассчитать</button>
         </form>
-
+        
         <div class="form-group">
             <label for="result">Результат:</label>
             <textarea id="result" readonly></textarea>
@@ -128,7 +109,8 @@
                 if (isNaN(age) || age < 0) {
                     throw new Error('Пожалуйста, введите корректный возраст');
                 }
-resultOutput.value = getPensionMessage(age, gender);
+
+                resultOutput.value = getPensionMessage(age, gender);
             } catch (error) {
                 resultOutput.value = error.message;
             }
