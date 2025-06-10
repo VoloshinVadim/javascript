@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ввод числа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .container {
+            margin: auto;
+        }
+        a {
+            font-size: 1.2em;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ввод числа</h1>
+        <a id="getNumberLink" href="https://thienlaoo123.github.io/javascript">Получить число</a>
+    </div>
+
+    <script>
+        'use strict';
+
+        document.getElementById('getNumberLink').addEventListener('click', function(event) {
+            event.preventDefault(); 
+
+            let isValid = false;
+            let userInput;
+
+            while (!isValid) {
+                userInput = prompt("Введите число больше 100:");
+                
+                if (userInput === null) {
+                    const userConfirmed = confirm("Вы отменили ввод. Перейти на главную страницу?");
+                    if (userConfirmed) {
+                        window.location.href = this.href;
+                    }
+                    return;
+                }
+
+                const number = parseFloat(userInput);
+                
+                if (!isNaN(number) && number > 100) {
+                    isValid = true;
+                } else {
+                    alert("Пожалуйста, введите число больше 100.");
+                }
+            }
+
+            window.location.href = this.href;
+        });
+    </script>
+</body>
+</html>
