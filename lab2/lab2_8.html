@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Добавление blackSpot</title>
+    <script src="lab2.js"></script>
+</head>
+<body>
+    <h1>Добавление свойства blackSpot</h1>
+    <p>Введите свойства объекта в формате JSON:</p>
+    <input type="text" id="object" placeholder='{"name": "John", "age": 30}'>
+    <button onclick="addSpot()">Добавить blackSpot</button>
+    <p id="result"></p>
+
+    <script>
+        function addSpot() {
+            try {
+                const objInput = document.getElementById('object').value;
+                const obj = objInput ? JSON.parse(objInput) : {};
+                const resultObj = addBlackSpot(obj);
+                
+                // Преобразуем объект в строку, включая символьные свойства
+                let resultStr = '{';
+                for (const key in resultObj) {
+                    resultStr += `${key}: ${resultObj[key]}, `;
+                }
+                resultStr += `[Symbol.for("blackSpot")]: ${resultObj[Symbol.for("blackSpot")]}}`;
+                
+                document.getElementById('result').textContent = resultStr;
+            } catch (e) {
+                document.getElementById('result').textContent = 'Ошибка: введите корректный JSON';
+            }
+        }
+    </script>
+</body>
+</html>
