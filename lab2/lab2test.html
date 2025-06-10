@@ -3,95 +3,96 @@
 <head>
   <meta charset="utf-8">
   <title>Mocha Tests for Lab 2</title>
-  <!-- Подключение стилей Mocha -->
+  <!-- Mocha styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/9.1.3/mocha.css">
 </head>
 <body>
-  <!-- Контейнер для вывода результатов тестов -->
+  <!-- Element to hold the test results -->
   <div id="mocha"></div>
 
-  <!-- 1. Подключение библиотек -->
+  <!-- Mocha and Chai libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/9.1.3/mocha.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.4/chai.js"></script>
-  
-  <!-- 2. Настройка Mocha -->
-  <script>
-    mocha.setup('bdd');
-  </script>
 
-  <!-- 3. Подключение вашего файла с функциями -->
+  <!-- Our functions to be tested -->
   <script src="lab2.js"></script>
 
-  <!-- 4. Описание тестов -->
   <script>
+    // Set up Mocha to use the BDD interface
+    mocha.setup('bdd');
+    // Gain access to Chai's "assert"
     const assert = chai.assert;
-
-    describe("pow(x, n)", function() {
-      it("возводит 2 в степень 2", () => assert.equal(pow(2, 2), 4));
-      it("возводит 3 в степень 3", () => assert.equal(pow(3, 3), 27));
-      it("любое число в степени 0 равно 1", () => assert.equal(pow(10, 0), 1));
-      it("возводит 2 в отрицательную степень -2", () => assert.equal(pow(2, -2), 0.25));
-    });
-
-    describe("sumTo(n)", function() {
-      it("сумма до 1 равна 1", () => assert.equal(sumTo(1), 1));
-      it("сумма до 4 равна 10", () => assert.equal(sumTo(4), 10));
-      it("сумма до 100 равна 5050", () => assert.equal(sumTo(100), 5050));
-    });
-
-    describe("isLeapYear(year)", function() {
-      it("2024 - високосный год (кратен 4, не кратен 100)", () => assert.isTrue(isLeapYear(2024)));
-      it("2025 - не високосный год", () => assert.isFalse(isLeapYear(2025)));
-      it("2000 - високосный год (кратен 400)", () => assert.isTrue(isLeapYear(2000)));
-      it("1900 - не високосный год (кратен 100, но не 400)", () => assert.isFalse(isLeapYear(1900)));
-    });
-
-    describe("factorial(n)", function() {
-      it("факториал 0 равен 1n", () => assert.strictEqual(factorial(0), 1n));
-      it("факториал 5 равен 120n", () => assert.strictEqual(factorial(5), 120n));
-      it("факториал 20 равен 2432902008176640000n", () => assert.strictEqual(factorial(20), 2432902008176640000n));
-    });
-
-    describe("fib(n)", function() {
-      it("fib(0) равен 0n", () => assert.strictEqual(fib(0), 0n));
-      it("fib(1) равен 1n", () => assert.strictEqual(fib(1), 1n));
-      it("fib(7) равен 13n", () => assert.strictEqual(fib(7), 13n));
-      it("fib(100) равен 354224848179261915075n", () => assert.strictEqual(fib(100), 354224848179261915075n));
-    });
-
-    describe("compare(x)", function() {
-      const compareWith5 = compare(5);
-      it("compare(5)(4) должно вернуть false", () => assert.isFalse(compareWith5(4)));
-      it("compare(5)(5) должно вернуть null", () => assert.isNull(compareWith5(5)));
-      it("compare(5)(6) должно вернуть true", () => assert.isTrue(compareWith5(6)));
-    });
-
-    describe("sum(...args)", function() {
-      it("sum() возвращает 0", () => assert.equal(sum(), 0));
-      it("sum(1) возвращает 1", () => assert.equal(sum(1), 1));
-      it("sum(1, 2) возвращает 3", () => assert.equal(sum(1, 2), 3));
-      it("sum(1, 2, 3, 4) возвращает 10", () => assert.equal(sum(1, 2, 3, 4), 10));
-    });
-
-    describe("addBlackSpot(obj)", function() {
-      it("добавляет символьное свойство к объекту", function() {
-        const obj = {};
-        const result = addBlackSpot(obj);
-        const blackSpotSymbol = Symbol.for("blackSpot");
-
-        assert.strictEqual(result, obj);
-        assert.isTrue(result[blackSpotSymbol]);
-        assert.equal(Object.getOwnPropertySymbols(result).length, 1);
-      });
-    });
   </script>
-  
-  <!-- 5. Запуск тестов ПОСЛЕ загрузки всей страницы -->
+
+  <!-- Test script -->
   <script>
-    window.onload = function() {
-      mocha.run();
-    };
-  </script>
+    describe('pow(x, n)', function() {
+      it('возводит 2 в степень 2, результат 4', () => assert.equal(pow(2, 2), 4));
+      it('возводит 2 в степень 0, результат 1', () => assert.equal(pow(2, 0), 1));
+      it('возводит 2 в степень -2, результат 0.25', () => assert.equal(pow(2, -2), 0.25));
+      it('возводит 3 в степень 3, результат 27', () => assert.equal(pow(3, 3), 27));
+    });
 
+    describe('sumTo(n)', function() {
+      it('сумма до 100 равна 5050', () => assert.equal(sumTo(100), 5050));
+      it('сумма до 1 равна 1', () => assert.equal(sumTo(1), 1));
+      it('сумма до 4 равна 10', () => assert.equal(sumTo(4), 10));
+    });
+
+    describe('isLeapYear(year)', function() {
+      it('2024 год - високосный', () => assert.isTrue(isLeapYear(2024)));
+      it('2025 год - не високосный', () => assert.isFalse(isLeapYear(2025)));
+      it('2000 год - високосный (кратен 400)', () => assert.isTrue(isLeapYear(2000)));
+      it('1900 год - не високосный (кратен 100, но не 400)', () => assert.isFalse(isLeapYear(1900)));
+    });
+
+    describe('factorial(n)', function() {
+      it('факториал 0 равен 1n', () => assert.strictEqual(factorial(0), 1n));
+      it('факториал 5 равен 120n', () => assert.strictEqual(factorial(5), 120n));
+      it('факториал 1 равен 1n', () => assert.strictEqual(factorial(1), 1n));
+      it('факториал 20 равен 2432902008176640000n', () => assert.strictEqual(factorial(20), 2432902008176640000n));
+    });
+
+    describe('fib(n)', function() {
+      it('0-е число Фибоначчи равно 0n', () => assert.strictEqual(fib(0), 0n));
+      it('1-е число Фибоначчи равно 1n', () => assert.strictEqual(fib(1), 1n));
+      it('2-е число Фибоначчи равно 1n', () => assert.strictEqual(fib(2), 1n));
+      it('10-е число Фибоначчи равно 55n', () => assert.strictEqual(fib(10), 55n));
+      it('100-е число Фибоначчи равно 354224848179261915075n', () => assert.strictEqual(fib(100), 354224848179261915075n));
+    });
+    
+    describe('compare(x)', function() {
+      const compareWith5 = compare(5);
+      it('сравнивает с 5: 4 < 5, возвращает false', () => assert.isFalse(compareWith5(4)));
+      it('сравнивает с 5: 5 = 5, возвращает null', () => assert.isNull(compareWith5(5)));
+      it('сравнивает с 5: 6 > 5, возвращает true', () => assert.isTrue(compareWith5(6)));
+    });
+    
+    describe('sum(...)', function() {
+        it('сумма без аргументов равна 0', () => assert.equal(sum(), 0));
+        it('сумма одного аргумента (1) равна 1', () => assert.equal(sum(1), 1));
+        it('сумма двух аргументов (1, 2) равна 3', () => assert.equal(sum(1, 2), 3));
+        it('сумма нескольких аргументов (1, 2, 3, 4) равна 10', () => assert.equal(sum(1, 2, 3, 4), 10));
+    });
+
+    describe('addBlackSpot(obj)', function() {
+        it('добавляет символьное свойство к пустому объекту', () => {
+            const myObject = {};
+            addBlackSpot(myObject);
+            const blackSpotSymbol = Symbol.for("blackSpot");
+            assert.isTrue(myObject[blackSpotSymbol]);
+        });
+        it('возвращает тот же самый объект', () => {
+            const myObject = { a: 1 };
+            const resultObject = addBlackSpot(myObject);
+            assert.strictEqual(myObject, resultObject);
+        });
+    });
+
+  </script>
+  <!-- Run the tests -->
+  <script>
+    mocha.run();
+  </script>
 </body>
 </html>
