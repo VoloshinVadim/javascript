@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Сравнение чисел</title>
+    <script src="lab2.js"></script>
+</head>
+<body>
+    <h1>Сравнение чисел</h1>
+    <p>Введите число x:</p>
+    <input type="number" id="x" placeholder="Число x">
+    <p>Введите число y:</p>
+    <input type="number" id="y" placeholder="Число y">
+    <button onclick="compareNumbers()">Сравнить</button>
+    <p id="result"></p>
+
+    <script>
+        function compareNumbers() {
+            const x = parseInt(document.getElementById('x').value);
+            const y = parseInt(document.getElementById('y').value);
+            const comparison = compare(x)(y);
+            
+            let resultText;
+            if (comparison === true) resultText = `${y} > ${x}`;
+            else if (comparison === false) resultText = `${y} < ${x}`;
+            else resultText = `${y} = ${x}`;
+            
+            document.getElementById('result').textContent = resultText;
+        }
+    </script>
+</body>
+</html>
