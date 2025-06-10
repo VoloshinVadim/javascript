@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Калькулятор степеней</title>
+    <script src="lab2.js"></script>
+</head>
+<body>
+    <h1>Калькулятор степеней</h1>
+    <p>Введите основание и показатель степени:</p>
+    <input type="number" id="base" placeholder="Основание (x)">
+    <input type="number" id="exponent" placeholder="Показатель (n)">
+    <button onclick="calculatePow()">Вычислить</button>
+    <p id="result"></p>
+
+    <script>
+        function calculatePow() {
+            const x = parseFloat(document.getElementById('base').value);
+            const n = parseInt(document.getElementById('exponent').value);
+            const result = pow(x, n);
+            document.getElementById('result').textContent = `${x}^${n} = ${result}`;
+        }
+    </script>
+</body>
+</html>
