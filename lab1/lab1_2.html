@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Считать ворон</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Считать ворон</h1>
+        <form id="crowForm">
+            <label for="num">Количество ворон:</label>
+            <input type="number" id="num" name="num" required min="1"><br><br>
+            <button type="button" onclick="countCrows()">Считать</button>
+        </form>
+    </div>
+
+    <script>
+        'use strict';
+
+        function countCrows() {
+            const num = parseInt(document.getElementById('num').value);
+            
+            // Проверка на корректный ввод
+            if (isNaN(num) || num < 1) {
+                alert('Пожалуйста, введите число больше 0');
+                return;
+            }
+
+            let word;
+            
+            if (num % 100 >= 11 && num % 100 <= 19) {
+                word = "ворон";
+            } else {
+                switch (num % 10) {
+                    case 1:
+                        word = "ворона";
+                        break;
+                    case 2:
+                    case 3:
+                    case 4:
+                        word = "вороны";
+                        break;
+                    default:
+                        word = "ворон";
+                }
+            }
+
+            alert(`На ветке сидит ${num} ${word}`);
+        }
+    </script>
+</body>
+</html>
