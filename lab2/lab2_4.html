@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Вычисление факториала</title>
+    <script src="lab2.js"></script>
+</head>
+<body>
+    <h1>Вычисление факториала</h1>
+    <p>Введите число:</p>
+    <input type="number" id="number" placeholder="Число">
+    <button onclick="calculateFactorial()">Вычислить</button>
+    <p id="result"></p>
+
+    <script>
+        function calculateFactorial() {
+            const n = parseInt(document.getElementById('number').value);
+            const result = factorial(n);
+            document.getElementById('result').textContent = `${n}! = ${result}`;
+        }
+    </script>
+</body>
+</html>
