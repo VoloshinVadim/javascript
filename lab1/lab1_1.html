@@ -76,7 +76,8 @@
                 </div>
             </div>
 
-            <button type="button" id="calculateBtn">Рассчитать</button>
+            <!-- 1. Изменили тип кнопки на "submit" -->
+            <button type="submit">Рассчитать</button>
         </form>
         
         <div class="form-group">
@@ -89,11 +90,16 @@
         'use strict';
 
         document.addEventListener('DOMContentLoaded', function() {
-            const calculateBtn = document.getElementById('calculateBtn');
-            calculateBtn.addEventListener('click', calculatePension);
+            // 2. Слушаем событие "submit" на всей форме, а не "click" на кнопке
+            const pensionForm = document.getElementById('pensionForm');
+            pensionForm.addEventListener('submit', calculatePension);
         });
-
-        function calculatePension() {
+        
+        // 3. Функция теперь принимает объект события 'event'
+        function calculatePension(event) {
+            // 4. Предотвращаем стандартное поведение формы (перезагрузку страницы)
+            event.preventDefault(); 
+            
             const ageInput = document.getElementById('age');
             const genderInput = document.querySelector('input[name="gender"]:checked');
             const resultOutput = document.getElementById('result');
