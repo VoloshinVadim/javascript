@@ -21,14 +21,25 @@
         <form id="crowForm">
             <label for="num">Количество ворон:</label>
             <input type="number" id="num" name="num" required min="1"><br><br>
-            <button type="button" onclick="countCrows()">Считать</button>
+            <!-- 1. Изменили тип кнопки и убрали onclick -->
+            <button type="submit">Считать</button>
         </form>
     </div>
 
     <script>
         'use strict';
 
-        function countCrows() {
+        // 2. Находим форму по ее id
+        const crowForm = document.getElementById('crowForm');
+
+        // 3. Добавляем обработчик события 'submit' на всю форму
+        crowForm.addEventListener('submit', countCrows);
+
+        // 4. Функция теперь принимает объект события 'event'
+        function countCrows(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку страницы)
+            event.preventDefault(); 
+            
             const num = parseInt(document.getElementById('num').value);
             
             // Проверка на корректный ввод
