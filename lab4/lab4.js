@@ -1,52 +1,60 @@
 'use strict';
 
 class Book {
+    // 1. Объявляем настоящие приватные поля с помощью #
+    #title;
+    #pubYear;
+    #price;
+
     constructor(title, pubYear, price) {
+        // Присваивание через сеттеры, которые теперь работают с приватными полями
         this.title = title;
         this.pubYear = pubYear;
         this.price = price;
     }
 
     get title() {
-        return this._title;
+        return this.#title; // 2. Используем # для доступа к приватным полям
     }
 
     set title(text) {
         if (typeof text !== 'string' || text.trim() === '') {
             throw new Error('Title must be a non-empty string.');
         }
-        this._title = text.trim();
+        this.#title = text.trim(); // 2. Используем # для записи в приватные поля
     }
 
     get pubYear() {
-        return this._pubYear;
+        return this.#pubYear;
     }
 
     set pubYear(newPubYear) {
         if (typeof newPubYear !== 'number' || newPubYear <= 0 || !Number.isInteger(newPubYear)) {
             throw new Error('pubYear must be a positive integer.');
         }
-        this._pubYear = newPubYear;
+        this.#pubYear = newPubYear;
     }
 
     get price() {
-        return this._price;
+        return this.#price;
     }
 
     set price(newPrice) {
         if (typeof newPrice !== 'number' || newPrice <= 0) {
             throw new Error('Price must be a positive number.');
         }
-        this._price = newPrice;
+        this.#price = newPrice;
     }
 
     show() {
-        console.log(`Название: ${this._title},
-Год публикации: ${this._pubYear},
-Цена: ${this._price}`);
+        // 3. В методах класса также используем # для доступа к данным
+        console.log(`Название: ${this.#title},
+Год публикации: ${this.#pubYear},
+Цена: ${this.#price}`);
     }
 
     static compare(book1, book2) {
+        // Статический метод работает с публичными геттерами, тут изменений нет
         return book1.pubYear - book2.pubYear;
     }
 }
