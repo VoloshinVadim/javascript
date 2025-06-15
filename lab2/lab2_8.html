@@ -2,32 +2,68 @@
 <html lang="ru">
 <head>
     <title>Добавление blackSpot</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию addBlackSpot(obj) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Добавление свойства blackSpot</h1>
     <p>Введите свойства объекта в формате JSON:</p>
-    <input type="text" id="object" placeholder='{"name": "John", "age": 30}'>
-    <button onclick="addSpot()">Добавить blackSpot</button>
+
+    <!-- 1. Обернули элементы управления в тег <form> -->
+    <form id="spotForm">
+        <input type="text" id="object" placeholder='{"name": "John", "age": 30}'>
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Добавить blackSpot</button>
+    </form>
+    
     <p id="result"></p>
 
     <script>
-        function addSpot() {
+        // 3. Находим форму и вешаем на нее обработчик события 'submit'
+        const spotForm = document.getElementById('spotForm');
+        spotForm.addEventListener('submit', addSpot);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция addBlackSpot находится в lab2.js, эту можно удалить.
+        if (typeof addBlackSpot === 'undefined') {
+            function addBlackSpot(obj) {
+                obj[Symbol.for("blackSpot")] = true; // Добавляем символьное свойство
+                return obj;
+            }
+        }
+
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function addSpot(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
+            const resultP = document.getElementById('result');
+            
             try {
                 const objInput = document.getElementById('object').value;
-                const obj = objInput ? JSON.parse(objInput) : {};
+                // Если поле пустое, создаем пустой объект
+                const obj = objInput.trim() ? JSON.parse(objInput) : {};
                 const resultObj = addBlackSpot(obj);
                 
-                // Преобразуем объект в строку, включая символьные свойства
-                let resultStr = '{';
+                // Улучшенный способ отображения объекта с символьными свойствами
+                const entries = [];
+                // Добавляем обычные свойства
                 for (const key in resultObj) {
-                    resultStr += `${key}: ${resultObj[key]}, `;
+                    if (Object.prototype.hasOwnProperty.call(resultObj, key)) {
+                         // Используем JSON.stringify для корректного отображения строк в кавычках
+                        entries.push(`"${key}": ${JSON.stringify(resultObj[key])}`);
+                    }
                 }
-                resultStr += `[Symbol.for("blackSpot")]: ${resultObj[Symbol.for("blackSpot")]}}`;
+                // Добавляем символьное свойство
+                const blackSpotSymbol = Symbol.for("blackSpot");
+                if (resultObj[blackSpotSymbol] !== undefined) {
+                    entries.push(`[Symbol(blackSpot)]: ${resultObj[blackSpotSymbol]}`);
+                }
                 
-                document.getElementById('result').textContent = resultStr;
+                resultP.textContent = `{ ${entries.join(', ')} }`;
+
             } catch (e) {
-                document.getElementById('result').textContent = 'Ошибка: введите корректный JSON';
+                resultP.textContent = 'Ошибка: введите корректный JSON';
             }
         }
     </script>
