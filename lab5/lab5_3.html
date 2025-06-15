@@ -8,6 +8,8 @@
         #text {
             font-size: 20px;
             margin: 20px 0;
+            /* Добавим это для плавности (необязательно, но красиво) */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
     </style>
 </head>
@@ -19,12 +21,18 @@
 <script>
     const textElement = document.getElementById('text');
     const toggleButton = document.getElementById('toggleButton');
+
     toggleButton.addEventListener('click', function() {
-        if (textElement.style.display === 'none') {
-            textElement.style.display = 'block';
+        // Проверяем свойство visibility. Пустая строка означает, что свойство не установлено и используется значение по умолчанию ('visible').
+        if (textElement.style.visibility === 'hidden') {
+            // Если текст скрыт, делаем его видимым
+            textElement.style.visibility = 'visible';
+            textElement.style.opacity = '1'; // Возвращаем непрозрачность для плавного появления
             toggleButton.textContent = 'Скрыть текст';
         } else {
-            textElement.style.display = 'none';
+            // Если текст видим, скрываем его
+            textElement.style.visibility = 'hidden';
+            textElement.style.opacity = '0'; // Делаем прозрачным для плавного исчезания
             toggleButton.textContent = 'Показать текст';
         }
     });
