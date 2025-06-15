@@ -2,20 +2,53 @@
 <html lang="ru">
 <head>
     <title>Сумма чисел</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию sumTo(n) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Сумма чисел от 1 до n</h1>
     <p>Введите число n:</p>
-    <input type="number" id="number" placeholder="Число n">
-    <button onclick="calculateSum()">Вычислить сумму</button>
+
+    <!-- 1. Обернули поле ввода и кнопку в тег <form> -->
+    <form id="sumForm">
+        <input type="number" id="number" placeholder="Число n">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Вычислить сумму</button>
+    </form>
+    
     <p id="result"></p>
 
     <script>
-        function calculateSum() {
+        // 3. Находим форму и добавляем слушатель события 'submit'
+        const sumForm = document.getElementById('sumForm');
+        sumForm.addEventListener('submit', calculateSum);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция sumTo находится в lab2.js, эту можно удалить.
+        if (typeof sumTo === 'undefined') {
+            function sumTo(n) {
+                if (isNaN(n) || n < 1) return 0;
+                // Формула арифметической прогрессии - самый быстрый способ
+                return n * (n + 1) / 2;
+            }
+        }
+        
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function calculateSum(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
             const n = parseInt(document.getElementById('number').value);
+            const resultP = document.getElementById('result');
+
+            // Добавим простую проверку на ввод
+            if (isNaN(n) || n < 1) {
+                resultP.textContent = 'Пожалуйста, введите натуральное число (>= 1).';
+                return;
+            }
+            
             const result = sumTo(n);
-            document.getElementById('result').textContent = `Сумма чисел от 1 до ${n} = ${result}`;
+            resultP.textContent = `Сумма чисел от 1 до ${n} = ${result}`;
         }
     </script>
 </body>
