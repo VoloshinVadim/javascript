@@ -26,7 +26,8 @@
         <form id="primeForm">
             <label for="n">Введите значение n:</label>
             <input type="number" id="n" name="n" min="2" required><br><br>
-            <button type="button" onclick="findPrimes()">Найти</button>
+            <!-- 1. Изменили тип кнопки и убрали onclick -->
+            <button type="submit">Найти</button>
         </form>
         <div id="result"></div>
     </div>
@@ -34,7 +35,15 @@
     <script>
         'use strict';
 
-        function findPrimes() {
+        // 2. Находим форму и вешаем на нее обработчик события 'submit'
+        const primeForm = document.getElementById('primeForm');
+        primeForm.addEventListener('submit', findPrimes);
+
+        // 3. Функция теперь принимает 'event' в качестве аргумента
+        function findPrimes(event) {
+            // 4. Предотвращаем стандартное поведение формы
+            event.preventDefault(); 
+
             const n = parseInt(document.getElementById('n').value);
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = ''; 
