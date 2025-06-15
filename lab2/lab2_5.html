@@ -2,20 +2,60 @@
 <html lang="ru">
 <head>
     <title>Числа Фибоначчи</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию fib(n) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Вычисление n-го числа Фибоначчи</h1>
     <p>Введите номер числа Фибоначчи:</p>
-    <input type="number" id="position" placeholder="Номер">
-    <button onclick="calculateFib()">Вычислить</button>
+
+    <!-- 1. Обернули элементы в тег <form> -->
+    <form id="fibForm">
+        <input type="number" id="position" placeholder="Номер" min="0">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Вычислить</button>
+    </form>
+    
     <p id="result"></p>
 
     <script>
-        function calculateFib() {
+        // 3. Находим форму и вешаем на нее обработчик события 'submit'
+        const fibForm = document.getElementById('fibForm');
+        fibForm.addEventListener('submit', calculateFib);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция fib находится в lab2.js, эту можно удалить.
+        if (typeof fib === 'undefined') {
+            function fib(n) {
+                if (isNaN(n) || n < 0) return "не определено";
+                if (n <= 1) return n;
+
+                let prev = 0, curr = 1;
+                for (let i = 2; i <= n; i++) {
+                    let next = prev + curr;
+                    prev = curr;
+                    curr = next;
+                }
+                return curr;
+            }
+        }
+        
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function calculateFib(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
             const n = parseInt(document.getElementById('position').value);
+            const resultP = document.getElementById('result');
+            
+            // Добавим проверку на ввод
+            if (isNaN(n) || n < 0) {
+                resultP.textContent = 'Пожалуйста, введите неотрицательное целое число.';
+                return;
+            }
+
             const result = fib(n);
-            document.getElementById('result').textContent = `fib(${n}) = ${result}`;
+            resultP.textContent = `fib(${n}) = ${result}`;
         }
     </script>
 </body>
