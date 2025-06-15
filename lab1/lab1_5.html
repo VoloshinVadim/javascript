@@ -57,10 +57,14 @@
     <div class="container">
         <h1>Таблица животных</h1>
         
-        <label for="rowsInput">Количество строк:</label>
-        <input type="number" id="rowsInput" min="1" value="5">
-        
-        <button id="drawButton">Рисовать</button>
+        <!-- 1. Обернули элементы управления в тег <form> -->
+        <form id="animalForm">
+            <label for="rowsInput">Количество строк:</label>
+            <input type="number" id="rowsInput" min="1" value="5">
+            
+            <!-- 2. Изменили тип кнопки на "submit" -->
+            <button type="submit">Рисовать</button>
+        </form>
         
         <div class="note">
             Результат будет выведен в консоль браузера (F12 → Console)
@@ -70,12 +74,16 @@
     <script>
         'use strict';
         
-        document.getElementById('drawButton').addEventListener('click', function() {
+        // 3. Находим форму по ID и слушаем событие 'submit'
+        document.getElementById('animalForm').addEventListener('submit', function(event) {
+            // 4. Отменяем стандартное поведение формы (перезагрузку)
+            event.preventDefault(); 
+            
             const rowsInput = document.getElementById('rowsInput');
             const rows = parseInt(rowsInput.value);
             
-            if (isNaN(rows)) {
-                console.error('Пожалуйста, введите число строк');
+            if (isNaN(rows) || rows < 1) { // Добавил проверку на < 1
+                console.error('Пожалуйста, введите число строк (больше 0)');
                 return;
             }
             
