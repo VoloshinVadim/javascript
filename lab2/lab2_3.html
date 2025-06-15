@@ -2,21 +2,56 @@
 <html lang="ru">
 <head>
     <title>Проверка високосного года</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию isLeapYear(year) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Проверка високосного года</h1>
     <p>Введите год:</p>
-    <input type="number" id="year" placeholder="Год">
-    <button onclick="checkYear()">Проверить</button>
+
+    <!-- 1. Обернули поле ввода и кнопку в тег <form> -->
+    <form id="yearForm">
+        <input type="number" id="year" placeholder="Год">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Проверить</button>
+    </form>
+    
     <p id="result"></p>
 
     <script>
-        function checkYear() {
-            const year = parseInt(document.getElementById('year').value);
+        // 3. Находим форму и добавляем слушатель события 'submit'
+        const yearForm = document.getElementById('yearForm');
+        yearForm.addEventListener('submit', checkYear);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция isLeapYear находится в lab2.js, эту можно удалить.
+        if (typeof isLeapYear === 'undefined') {
+            function isLeapYear(year) {
+                if (isNaN(year)) return false;
+                // Год является високосным, если он делится на 4, но не на 100,
+                // либо если он делится на 400.
+                return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+            }
+        }
+
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function checkYear(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
+            const yearInput = document.getElementById('year');
+            const resultP = document.getElementById('result');
+            const year = parseInt(yearInput.value);
+
+            // Добавим простую проверку на ввод
+            if (isNaN(year)) {
+                resultP.textContent = 'Пожалуйста, введите год.';
+                return;
+            }
+
             const isLeap = isLeapYear(year);
             const resultText = isLeap ? "високосный" : "не високосный";
-            document.getElementById('result').textContent = `${year} год - ${resultText}`;
+            resultP.textContent = `${year} год - ${resultText}`;
         }
     </script>
 </body>
