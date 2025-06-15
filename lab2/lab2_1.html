@@ -2,22 +2,55 @@
 <html lang="ru">
 <head>
     <title>Калькулятор степеней</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию pow(x, n) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Калькулятор степеней</h1>
     <p>Введите основание и показатель степени:</p>
-    <input type="number" id="base" placeholder="Основание (x)">
-    <input type="number" id="exponent" placeholder="Показатель (n)">
-    <button onclick="calculatePow()">Вычислить</button>
+    
+    <!-- 1. Обернули поля ввода и кнопку в тег <form> -->
+    <form id="calculatorForm">
+        <input type="number" id="base" placeholder="Основание (x)">
+        <input type="number" id="exponent" placeholder="Показатель (n)">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Вычислить</button>
+    </form>
+
     <p id="result"></p>
 
     <script>
-        function calculatePow() {
+        // 3. Находим форму и добавляем слушатель события 'submit'
+        const calculatorForm = document.getElementById('calculatorForm');
+        calculatorForm.addEventListener('submit', calculatePow);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция pow находится в lab2.js, эту можно удалить.
+        if (typeof pow === 'undefined') {
+            function pow(base, exponent) {
+                // Простая проверка для корректной работы
+                if (isNaN(base) || isNaN(exponent)) return 'Ошибка в данных';
+                return Math.pow(base, exponent);
+            }
+        }
+        
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function calculatePow(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
             const x = parseFloat(document.getElementById('base').value);
             const n = parseInt(document.getElementById('exponent').value);
+            const resultP = document.getElementById('result');
+
+            // Добавим простую проверку на ввод
+            if (isNaN(x) || isNaN(n)) {
+                resultP.textContent = 'Пожалуйста, введите оба числа.';
+                return;
+            }
+
             const result = pow(x, n);
-            document.getElementById('result').textContent = `${x}^${n} = ${result}`;
+            resultP.textContent = `${x}^${n} = ${result}`;
         }
     </script>
 </body>
