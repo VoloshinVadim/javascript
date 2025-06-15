@@ -2,29 +2,68 @@
 <html lang="ru">
 <head>
     <title>Сравнение чисел</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию compare(x) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Сравнение чисел</h1>
-    <p>Введите число x:</p>
-    <input type="number" id="x" placeholder="Число x">
-    <p>Введите число y:</p>
-    <input type="number" id="y" placeholder="Число y">
-    <button onclick="compareNumbers()">Сравнить</button>
+    
+    <!-- 1. Обернули элементы управления в тег <form> -->
+    <form id="compareForm">
+        <p>Введите число x:</p>
+        <input type="number" id="x" placeholder="Число x">
+        <p>Введите число y:</p>
+        <input type="number" id="y" placeholder="Число y">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Сравнить</button>
+    </form>
+
     <p id="result"></p>
 
     <script>
-        function compareNumbers() {
+        // 3. Находим форму и вешаем на нее обработчик события 'submit'
+        const compareForm = document.getElementById('compareForm');
+        compareForm.addEventListener('submit', compareNumbers);
+        
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция compare находится в lab2.js, эту можно удалить.
+        if (typeof compare === 'undefined') {
+            function compare(x) {
+                return function(y) {
+                    if (y > x) return true;
+                    if (y < x) return false;
+                    return null; // Возвращаем null при равенстве
+                };
+            }
+        }
+        
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function compareNumbers(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault();
+
+            const resultP = document.getElementById('result');
             const x = parseInt(document.getElementById('x').value);
             const y = parseInt(document.getElementById('y').value);
+
+            // Добавим проверку на ввод
+            if (isNaN(x) || isNaN(y)) {
+                resultP.textContent = 'Пожалуйста, введите оба числа.';
+                return;
+            }
+            
             const comparison = compare(x)(y);
             
             let resultText;
-            if (comparison === true) resultText = `${y} > ${x}`;
-            else if (comparison === false) resultText = `${y} < ${x}`;
-            else resultText = `${y} = ${x}`;
+            if (comparison === true) {
+                resultText = `${y} > ${x}`;
+            } else if (comparison === false) {
+                resultText = `${y} < ${x}`;
+            } else {
+                resultText = `${y} = ${x}`;
+            }
             
-            document.getElementById('result').textContent = resultText;
+            resultP.textContent = resultText;
         }
     </script>
 </body>
