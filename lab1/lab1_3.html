@@ -30,8 +30,13 @@
     <script>
         'use strict';
 
-        document.getElementById('getNumberLink').addEventListener('click', function(event) {
+        // 1. Вынесли всю логику в отдельную именованную функцию
+        function startNumberPrompt(event) {
             event.preventDefault(); 
+
+            // Находим ссылку прямо внутри функции, чтобы она не зависела от 'this'
+            const link = document.getElementById('getNumberLink');
+            const targetUrl = link.href;
 
             let isValid = false;
             let userInput;
@@ -42,9 +47,9 @@
                 if (userInput === null) {
                     const userConfirmed = confirm("Вы отменили ввод. Перейти на главную страницу?");
                     if (userConfirmed) {
-                        window.location.href = this.href;
+                        window.location.href = targetUrl;
                     }
-                    return;
+                    return; // Выходим из функции, если пользователь отменил
                 }
 
                 const number = parseFloat(userInput);
@@ -55,9 +60,24 @@
                     alert("Пожалуйста, введите число больше 100.");
                 }
             }
+            
+            // Если все успешно, переходим по ссылке
+            alert("Отлично! Вы ввели корректное число.");
+            window.location.href = targetUrl;
+        }
 
-            window.location.href = this.href;
+        // 2. Привязываем функцию к клику по ссылке
+        document.getElementById('getNumberLink').addEventListener('click', startNumberPrompt);
+
+        // 3. Добавляем новый обработчик для нажатия клавиш на всей странице
+        document.addEventListener('keydown', function(event) {
+            // Проверяем, что была нажата именно клавиша Enter
+            if (event.key === 'Enter') {
+                // И вызываем ту же самую функцию
+                startNumberPrompt(event);
+            }
         });
+
     </script>
 </body>
 </html>
