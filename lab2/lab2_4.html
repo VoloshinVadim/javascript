@@ -2,20 +2,61 @@
 <html lang="ru">
 <head>
     <title>Вычисление факториала</title>
+    <!-- Убедитесь, что этот файл подключен и содержит функцию factorial(n) -->
     <script src="lab2.js"></script>
 </head>
 <body>
     <h1>Вычисление факториала</h1>
     <p>Введите число:</p>
-    <input type="number" id="number" placeholder="Число">
-    <button onclick="calculateFactorial()">Вычислить</button>
+    
+    <!-- 1. Обернули элементы в тег <form> -->
+    <form id="factorialForm">
+        <input type="number" id="number" placeholder="Число">
+        <!-- 2. Изменили тип кнопки и убрали onclick -->
+        <button type="submit">Вычислить</button>
+    </form>
+    
     <p id="result"></p>
 
     <script>
-        function calculateFactorial() {
+        // 3. Находим форму и вешаем на нее обработчик события 'submit'
+        const factorialForm = document.getElementById('factorialForm');
+        factorialForm.addEventListener('submit', calculateFactorial);
+
+        // ВАЖНО: Я добавил эту функцию-заглушку, чтобы код работал.
+        // Если у вас функция factorial находится в lab2.js, эту можно удалить.
+        if (typeof factorial === 'undefined') {
+            function factorial(n) {
+                if (isNaN(n) || n < 0) {
+                    return 'не определен (введите >= 0)';
+                }
+                if (n === 0) {
+                    return 1;
+                }
+                let result = 1;
+                for (let i = 2; i <= n; i++) {
+                    result *= i;
+                }
+                return result;
+            }
+        }
+
+        // 4. Модифицируем функцию, чтобы она принимала 'event'
+        function calculateFactorial(event) {
+            // 5. Отменяем стандартное действие формы (перезагрузку)
+            event.preventDefault(); 
+            
             const n = parseInt(document.getElementById('number').value);
+            const resultP = document.getElementById('result');
+
+            // Добавим простую проверку на ввод
+            if (isNaN(n)) {
+                resultP.textContent = 'Пожалуйста, введите число.';
+                return;
+            }
+
             const result = factorial(n);
-            document.getElementById('result').textContent = `${n}! = ${result}`;
+            resultP.textContent = `${n}! = ${result}`;
         }
     </script>
 </body>
