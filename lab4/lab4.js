@@ -51,10 +51,16 @@ class Book {
     }
 }
 
+/**
+ * Форматирует дату в строку вида "дд.мм.гггг"
+ * @param {Date} date - объект даты
+ * @returns {string} - отформатированная дата
+ */
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear()).slice(-2);
+    const year = date.getFullYear(); // Получаем полный год
+    
     return `${day}.${month}.${year}`;
 }
 
@@ -78,44 +84,30 @@ try {
         books[i].show();
     }
 
-    // ----- ИСПРАВЛЕННАЯ ФУНКЦИЯ И ПРОВЕРКИ -----
-
     /**
-     * Создайте функцию isEmpty(obj), которая возвращает true, если в объекте нет свойств 
-     * (в том числе символьных и неперечисляемых) и false – если хоть одно свойство есть.
-     * Reflect.ownKeys(obj) возвращает массив ВСЕХ собственных ключей объекта (и строки, и символы).
-     * Это самый надёжный способ.
+     * Возвращает true, если в объекте нет свойств (в том числе символьных и неперечисляемых) 
+     * и false – если хоть одно свойство есть.
      */
     function isEmpty(obj) {
         if (obj === null || typeof obj !== 'object') {
-            // Можно считать не-объекты "пустыми" или бросать ошибку,
-            // но для простоты вернём true, как было в вашем коде.
             return true;
         }
         return Reflect.ownKeys(obj).length === 0;
     }
 
     console.log("\n--- Проверка функции isEmpty по заданию ---");
-
-    // 1. Проверка на пустом объекте
     let emptyObj = {};
-    console.log("Проверка на {}:", isEmpty(emptyObj)); // Ожидаем: true
+    console.log("Проверка на {}:", isEmpty(emptyObj)); // true
 
-    // 2. Проверка на объекте с символьным свойством
     let symbolObj = { [Symbol("id")]: true };
-    console.log("Проверка на {[Symbol()]: true}:", isEmpty(symbolObj)); // Ожидаем: false
+    console.log("Проверка на {[Symbol()]: true}:", isEmpty(symbolObj)); // false
 
-    // 3. Проверка на объекте с неперечисляемым свойством
     let nonEnumObj = Object.defineProperty({}, 'name', { value: 'John' });
-    console.log("Проверка на объекте с неперечисляемым свойством:", isEmpty(nonEnumObj)); // Ожидаем: false
-    
+    console.log("Проверка на объекте с неперечисляемым свойством:", isEmpty(nonEnumObj)); // false
     console.log("--- Конец проверки isEmpty ---\n");
-
-    // ----- ОСТАЛЬНАЯ ЧАСТЬ ВАШЕГО КОДА -----
 
     let classObject = {
         className: "open menu",
-
         addClass(cls) {
             let classes = this.className.split(' ');
             if (!classes.includes(cls)) {
@@ -123,7 +115,6 @@ try {
             }
             return this;
         },
-
         removeClass(cls) {
             let classes = this.className.split(' ');
             let index = classes.indexOf(cls);
@@ -161,9 +152,9 @@ try {
     let date2 = new Date(2000, 11, 1); 
     let date3 = new Date(1995, 9, 10); 
 
-    console.log("Дата 1:", formatDate(date1));
-    console.log("Дата 2:", formatDate(date2));
-    console.log("Дата 3:", formatDate(date3));
+    console.log("Дата 1:", formatDate(date1));  // Ожидаем: 20.01.2024
+    console.log("Дата 2:", formatDate(date2));  // Ожидаем: 01.12.2000
+    console.log("Дата 3:", formatDate(date3));  // Ожидаем: 10.10.1995
 
 } catch (error) {
     console.error("Произошла ошибка:", error.message);
