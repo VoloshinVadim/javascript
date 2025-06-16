@@ -1,79 +1,64 @@
 'use strict';
 
 class Book {
-    // 1. Объявляем настоящие приватные поля с помощью #
-    #title;
-    #pubYear;
-    #price;
-
     constructor(title, pubYear, price) {
-        // Присваивание через сеттеры, которые теперь работают с приватными полями
         this.title = title;
         this.pubYear = pubYear;
         this.price = price;
     }
 
     get title() {
-        return this.#title; // 2. Используем # для доступа к приватным полям
+        return this._title;
     }
 
     set title(text) {
         if (typeof text !== 'string' || text.trim() === '') {
             throw new Error('Title must be a non-empty string.');
         }
-        this.#title = text.trim(); // 2. Используем # для записи в приватные поля
+        this._title = text.trim();
     }
 
     get pubYear() {
-        return this.#pubYear;
+        return this._pubYear;
     }
 
     set pubYear(newPubYear) {
         if (typeof newPubYear !== 'number' || newPubYear <= 0 || !Number.isInteger(newPubYear)) {
             throw new Error('pubYear must be a positive integer.');
         }
-        this.#pubYear = newPubYear;
+        this._pubYear = newPubYear;
     }
 
     get price() {
-        return this.#price;
+        return this._price;
     }
 
     set price(newPrice) {
         if (typeof newPrice !== 'number' || newPrice <= 0) {
             throw new Error('Price must be a positive number.');
         }
-        this.#price = newPrice;
+        this._price = newPrice;
     }
 
     show() {
-        // 3. В методах класса также используем # для доступа к данным
-        console.log(`Название: ${this.#title},
-Год публикации: ${this.#pubYear},
-Цена: ${this.#price}`);
+        console.log(`Название: ${this._title},
+Год публикации: ${this._pubYear},
+Цена: ${this._price}`);
     }
 
     static compare(book1, book2) {
-        // Статический метод работает с публичными геттерами, тут изменений нет
         return book1.pubYear - book2.pubYear;
     }
 }
 
-/**
- * Форматирует объект Date в строку в формате YYYY-MM-DD.
- * Это гарантирует одинаковый вывод независимо от языковых настроек системы.
- * @param {Date} date - Объект Date, который нужно отформатировать
- * @returns {string} Строка с датой в формате YYYY-MM-DD
- */
 function formatDate(date) {
-    // Получаем компоненты даты
-    const year = date.getFullYear();
-    // Месяцы в JavaScript начинаются с 0 (январь = 0), поэтому добавляем 1
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    // Получаем компоненты даты в формате дд.мм.гг
     const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
     
-    // Собираем дату в формате YYYY-MM-DD
-    return `${year}-${month}-${day}`;
+    // Собираем дату в формате дд.мм.гг (например: 11.11.11)
+    return `${day}.${month}.${year}`;
 }
 
 try {
@@ -159,9 +144,9 @@ try {
     let date2 = new Date(2000, 11, 1); 
     let date3 = new Date(1995, 9, 10); 
 
-    console.log("Дата 1:", formatDate(date1));  // 2024-01-20
-    console.log("Дата 2:", formatDate(date2));  // 2000-12-01
-    console.log("Дата 3:", formatDate(date3));  // 1995-10-10
+    console.log("Дата 1:", formatDate(date1));  // 20.01.24
+    console.log("Дата 2:", formatDate(date2));  // 01.12.00
+    console.log("Дата 3:", formatDate(date3));  // 10.10.95
 } catch (error) {
     console.error("Произошла ошибка:", error.message);
 }
